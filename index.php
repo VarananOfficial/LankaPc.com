@@ -3,7 +3,7 @@
 
 <body class="hold-transition skin-blue layout-top-nav">
 	<div class="wrapper">
-
+		<h1>Varanan</h1>
 		<?php include 'includes/navbar.php'; ?>
 
 		<div class="content-wrapper">
