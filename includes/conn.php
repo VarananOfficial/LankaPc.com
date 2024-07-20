@@ -2,9 +2,9 @@
 
 Class Database{
  
-	private $server = "mysql:host=localhost;dbname=wp_project";
-	private $username = "root";
-	private $password = "";
+	private $server = "mysql:host=localhost;dbname=u935714169_wp_project";
+	private $username = "u935714169_lankapc";
+	private $password = "HYHyBNa5";
 	private $options  = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,);
 	protected $conn;
  	
