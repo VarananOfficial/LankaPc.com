@@ -7,7 +7,6 @@
 
 		<div class="content-wrapper">
 			<div class="container">
-
 				<!-- Main content -->
 				<section class="content">
 					<div class="row">
@@ -22,6 +21,7 @@
 								unset($_SESSION['error']);
 							}
 							?>
+							<h1>Hiii</h1>
 							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 								<ol class="carousel-indicators">
 									<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>

@@ -12,6 +12,8 @@
     // Open the database connection
     $conn = $pdo->open();
 
+    
+
     try{
       // Insert the order details into the orders table with the status 'COD'
       $stmt = $conn->prepare("INSERT INTO sales(user_id,pay_id,order_total,status) VALUES (:user_id, :order_id, :order_total, 'COD')");
