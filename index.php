@@ -21,7 +21,6 @@
 								unset($_SESSION['error']);
 							}
 							?>
-							<h1>Hiii</h1>
 							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 								<ol class="carousel-indicators">
 									<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -33,7 +32,7 @@
 										<img src="images/build.png" alt="First slide">
 									</div>
 									<div class="item">
-										<img src="images\aboutttt.jpg"alt="Second slide">
+										<img src="images\aboutttt.jpg" alt="Second slide">
 									</div>
 									<div class="item">
 										<img src="images\no1.jpg" alt="Third slide">
@@ -46,7 +45,7 @@
 									<span class="fa fa-angle-right"></span>
 								</a>
 							</div>
-						
+
 							<?php
 							$month = date('m');
 							$conn = $pdo->open();
@@ -88,7 +87,7 @@
 							$pdo->close();
 
 							?>
-								<h2>Products</h2>
+							<h2>Products</h2>
 						</div>
 						<section class="content">
 							<div class="row">
@@ -153,114 +152,155 @@
 	<?php include 'includes/scripts.php'; ?>
 
 	<script>
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 11,
-          center: { lat: 9.8043, lng: 80.1654 },
-          styles: [
-            {
-              elementType: "geometry",
-              stylers: [{ color: "#fefefe" }],
-            },
-            {
-              elementType: "labels.icon",
-              stylers: [{ visibility: "off" }],
-            },
-            {
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#616161" }],
-            },
-            {
-              elementType: "labels.text.stroke",
-              stylers: [{ color: "#f5f5f5" }],
-            },
-            {
-              featureType: "administrative.land_parcel",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#bdbdbd" }],
-            },
-            {
-              featureType: "poi",
-              elementType: "geometry",
-              stylers: [{ color: "#eeeeee" }],
-            },
-            {
-              featureType: "poi",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#757575" }],
-            },
-            {
-              featureType: "poi.park",
-              elementType: "geometry",
-              stylers: [{ color: "#e5e5e5" }],
-            },
-            {
-              featureType: "poi.park",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#9e9e9e" }],
-            },
-            {
-              featureType: "road",
-              elementType: "geometry",
-              stylers: [{ color: "#eee" }],
-            },
-            {
-              featureType: "road.arterial",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#3d3523" }],
-            },
-            {
-              featureType: "road.highway",
-              elementType: "geometry",
-              stylers: [{ color: "#eee" }],
-            },
-            {
-              featureType: "road.highway",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#616161" }],
-            },
-            {
-              featureType: "road.local",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#9e9e9e" }],
-            },
-            {
-              featureType: "transit.line",
-              elementType: "geometry",
-              stylers: [{ color: "#e5e5e5" }],
-            },
-            {
-              featureType: "transit.station",
-              elementType: "geometry",
-              stylers: [{ color: "#000" }],
-            },
-            {
-              featureType: "water",
-              elementType: "geometry",
-              stylers: [{ color: "#c8d7d4" }],
-            },
-            {
-              featureType: "water",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#b1a481" }],
-            },
-          ],
-        });
+		function initMap() {
+			var map = new google.maps.Map(document.getElementById("map"), {
+				zoom: 11,
+				center: {
+					lat: 9.8043,
+					lng: 80.1654
+				},
+				styles: [{
+						elementType: "geometry",
+						stylers: [{
+							color: "#fefefe"
+						}],
+					},
+					{
+						elementType: "labels.icon",
+						stylers: [{
+							visibility: "off"
+						}],
+					},
+					{
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#616161"
+						}],
+					},
+					{
+						elementType: "labels.text.stroke",
+						stylers: [{
+							color: "#f5f5f5"
+						}],
+					},
+					{
+						featureType: "administrative.land_parcel",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#bdbdbd"
+						}],
+					},
+					{
+						featureType: "poi",
+						elementType: "geometry",
+						stylers: [{
+							color: "#eeeeee"
+						}],
+					},
+					{
+						featureType: "poi",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#757575"
+						}],
+					},
+					{
+						featureType: "poi.park",
+						elementType: "geometry",
+						stylers: [{
+							color: "#e5e5e5"
+						}],
+					},
+					{
+						featureType: "poi.park",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#9e9e9e"
+						}],
+					},
+					{
+						featureType: "road",
+						elementType: "geometry",
+						stylers: [{
+							color: "#eee"
+						}],
+					},
+					{
+						featureType: "road.arterial",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#3d3523"
+						}],
+					},
+					{
+						featureType: "road.highway",
+						elementType: "geometry",
+						stylers: [{
+							color: "#eee"
+						}],
+					},
+					{
+						featureType: "road.highway",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#616161"
+						}],
+					},
+					{
+						featureType: "road.local",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#9e9e9e"
+						}],
+					},
+					{
+						featureType: "transit.line",
+						elementType: "geometry",
+						stylers: [{
+							color: "#e5e5e5"
+						}],
+					},
+					{
+						featureType: "transit.station",
+						elementType: "geometry",
+						stylers: [{
+							color: "#000"
+						}],
+					},
+					{
+						featureType: "water",
+						elementType: "geometry",
+						stylers: [{
+							color: "#c8d7d4"
+						}],
+					},
+					{
+						featureType: "water",
+						elementType: "labels.text.fill",
+						stylers: [{
+							color: "#b1a481"
+						}],
+					},
+				],
+			});
 
-        var image = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-        var beachMarker = new google.maps.Marker({
-          position: { lat: 9.798367571043093, lng: 80.18522906622412 },
-          map: map,
-          icon: image,
-        });
-      }
-    </script>
+			var image = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+			var beachMarker = new google.maps.Marker({
+				position: {
+					lat: 9.798367571043093,
+					lng: 80.18522906622412
+				},
+				map: map,
+				icon: image,
+			});
+		}
+	</script>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
 
 
- 
+
 </body>
 
 </html>
