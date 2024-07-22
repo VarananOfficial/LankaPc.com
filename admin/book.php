@@ -8,7 +8,6 @@
   if(isset($_GET['year'])){
     $year = $_GET['year'];
   }
-
   $conn = $pdo->open();
 ?>
 <?php include 'includes/header.php'; ?>
@@ -23,16 +22,15 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard
+      Total Sales
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
+        <li class="active">Total Sales</li>
+        
       </ol>
     </section>
-
     <!-- Main content -->
-    <section class="content">
       <?php
         if(isset($_SESSION['error'])){
           echo "
@@ -153,40 +151,68 @@
         <!-- ./col -->
       </div>
       <!-- /.row -->
+      <!-- <section class="content"> -->
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Monthly Sales Report</h3>
-              <div class="box-tools pull-right">
-                <form class="form-inline">
-                  <div class="form-group">
-                    <label>Select Year: </label>
-                    <select class="form-control input-sm" id="select_year">
-                      <?php
-                        for($i=2015; $i<=2065; $i++){
-                          $selected = ($i==$year)?'selected':'';
-                          echo "
-                            <option value='".$i."' ".$selected.">".$i."</option>
-                          ";
-                        }
-                      ?>
-                    </select>
-                    <label>Select Chart Type: </label>
-                    <select class="form-control input-sm" id="select_chart_type">
-                      <option value="bar">Bar</option>
-                      <option value="line">Line</option>
-                    </select>
+              <div class="pull-right">
+                <form method="POST" class="form-inline" action="sales_print.php">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control pull-right col-sm-8" id="reservation" name="date_range">
                   </div>
+                  <button type="submit" class="btn btn-success btn-sm btn-flat" name="print"><span class="glyphicon glyphicon-print"></span> Print</button>
                 </form>
               </div>
             </div>
             <div class="box-body">
-              <div class="chart">
-                <br>
-                <div id="legend" class="text-center"></div>
-                <canvas id="chartCanvas" style="height:350px"></canvas>
-              </div>
+              <table id="example1" class="table table-bordered">
+                <thead>
+                  <th class="hidden"></th>
+                  <th>Date</th>
+                  <th>Buyer Name</th>
+                  <th>Transaction#</th>
+                  <th>Amount</th>
+                  <th>Full Details</th>
+                </thead>
+                <tbody>
+                  <?php
+                    $conn = $pdo->open();
+
+                    try{
+                      $stmt = $conn->prepare("SELECT *, sales.id AS salesid FROM sales LEFT JOIN users ON users.id=sales.user_id ORDER BY sales_date DESC");
+                      $stmt->execute();
+                      foreach($stmt as $row){
+                        $stmt = $conn->prepare("SELECT * FROM details LEFT JOIN products ON products.id=details.product_id WHERE details.sales_id=:id");
+                        $stmt->execute(['id'=>$row['salesid']]);
+                        $total = 0;
+                        foreach($stmt as $details){
+                          $subtotal = $details['price']*$details['quantity'];
+                          $total += $subtotal;
+                        }
+                        echo "
+                          <tr>
+                            <td class='hidden'></td>
+                            <td>".date('M d, Y', strtotime($row['sales_date']))."</td>
+                            <td>".$row['firstname'].' '.$row['lastname']."</td>
+                            <td>".$row['pay_id']."</td>
+                            <td>&#36; ".number_format($total, 2)."</td>
+                            <td><button type='button' class='btn btn-info btn-sm btn-flat transact' data-id='".$row['salesid']."'><i class='fa fa-search'></i> View</button></td>
+                          </tr>
+                        ";
+                      }
+                    }
+                    catch(PDOException $e){
+                      echo $e->getMessage();
+                    }
+
+                    $pdo->close();
+                  ?>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -199,94 +225,73 @@
 
 </div>
 <!-- ./wrapper -->
-
-<!-- Chart Data -->
-<?php
-  $months = array();
-  $sales = array();
-  for( $m = 1; $m <= 12; $m++ ) {
-    try{
-      $stmt = $conn->prepare("SELECT * FROM details LEFT JOIN sales ON sales.id=details.sales_id LEFT JOIN products ON products.id=details.product_id WHERE MONTH(sales_date)=:month AND YEAR(sales_date)=:year");
-      $stmt->execute(['month'=>$m, 'year'=>$year]);
-      $total = 0;
-      foreach($stmt as $srow){
-        $subtotal = $srow['price']*$srow['quantity'];
-        $total += $subtotal;    
-      }
-      array_push($sales, round($total, 2));
-    }
-    catch(PDOException $e){
-      echo $e->getMessage();
-    }
-
-    $num = str_pad( $m, 2, 0, STR_PAD_LEFT );
-    $month =  date('M', mktime(0, 0, 0, $m, 1));
-    array_push($months, $month);
-  }
-
-  $months = json_encode($months);
-  $sales = json_encode($sales);
-
-?>
-<!-- End Chart Data -->
-
 <?php $pdo->close(); ?>
 <?php include 'includes/scripts.php'; ?>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Date Picker -->
 <script>
 $(function(){
-  var chartType = 'bar';
-  var chartData = {
-    labels  : <?php echo $months; ?>,
-    datasets: [
-      {
-        label               : 'SALES',
-        backgroundColor     : 'rgba(60,141,188,0.9)',
-        borderColor         : 'rgba(60,141,188,0.8)',
-        pointColor          : '#3b8bba',
-        pointStrokeColor    : 'rgba(60,141,188,1)',
-        pointHighlightFill  : '#fff',
-        pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : <?php echo $sales; ?>
+  //Date picker
+  $('#datepicker_add').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd'
+  })
+  $('#datepicker_edit').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd'
+  })
+
+  //Timepicker
+  $('.timepicker').timepicker({
+    showInputs: false
+  })
+
+  //Date range picker
+  $('#reservation').daterangepicker()
+  //Date range picker with time picker
+  $('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+  //Date range as a button
+  $('#daterange-btn').daterangepicker(
+    {
+      ranges   : {
+        'Today'       : [moment(), moment()],
+        'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+        'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      },
+      startDate: moment().subtract(29, 'days'),
+      endDate  : moment()
+    },
+    function (start, end) {
+      $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+    }
+  )
+  
+});
+</script>
+<script>
+$(function(){
+  $(document).on('click', '.transact', function(e){
+    e.preventDefault();
+    $('#transaction').modal('show');
+    var id = $(this).data('id');
+    $.ajax({
+      type: 'POST',
+      url: 'transact.php',
+      data: {id:id},
+      dataType: 'json',
+      success:function(response){
+        $('#date').html(response.date);
+        $('#transid').html(response.transaction);
+        $('#detail').prepend(response.list);
+        $('#total').html(response.total);
       }
-    ]
-  };
-
-  var chartOptions = {
-    scaleBeginAtZero        : true,
-    scaleShowGridLines      : true,
-    scaleGridLineColor      : 'rgba(0,0,0,.05)',
-    scaleGridLineWidth      : 0.5,
-    scaleShowHorizontalLines: true,
-    scaleShowVerticalLines  : true,
-    barShowStroke           : true,
-    barStrokeWidth          : 1,
-    barValueSpacing         : 3,
-    barDatasetSpacing       : 1,
-    legendTemplate          : '<ul class="box-body"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>',
-    responsive              : true,
-    maintainAspectRatio     : true
-  };
-
-  var ctx = $('#chartCanvas').get(0).getContext('2d');
-  var chart = new Chart(ctx, {
-    type: chartType,
-    data: chartData,
-    options: chartOptions
-  });
-
-  $('#select_chart_type').change(function(){
-    chartType = $(this).val();
-    chart.destroy();
-    chart = new Chart(ctx, {
-      type: chartType,
-      data: chartData,
-      options: chartOptions
     });
   });
 
-  $('#select_year').change(function(){
-    window.location.href = 'home.php?year='+$(this).val();
+  $("#transaction").on("hidden.bs.modal", function () {
+      $('.prepend_items').remove();
   });
 });
 </script>
